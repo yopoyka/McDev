@@ -1,0 +1,37 @@
+plugins {
+    id 'groovy'
+    id 'maven-publish'
+}
+
+group 'yopoyka'
+version '1.0' + (findProperty('snapshot') ? '-SNAPSHOT' : '')
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+publishing {
+    repositories {
+        maven {
+            url = file('repo')
+        }
+    }
+    publications {
+        java(MavenPublication) {
+            from components.java
+
+            artifact sourceJar {
+                classifier = 'sources'
+            }
+        }
+    }
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
